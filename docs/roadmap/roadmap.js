@@ -163,6 +163,10 @@ window.ROADMAP_DATA = {
   "log": [
     {
       "date": "2026-10-24",
+      "text": "Fixed SVG map rendering, restored full highway styling, and bundled prompt suite"
+    },
+    {
+      "date": "2026-10-24",
       "text": "Published Roadmap-Gen to GitHub with live GitHub Pages"
     },
     {

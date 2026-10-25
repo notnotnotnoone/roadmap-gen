@@ -42,10 +42,12 @@
 .dim { opacity: .18; transition: opacity .2s; }
 .halo { transform-box: fill-box; transform-origin: center; animation: halo 1.8s ease-out infinite; }
 @keyframes halo { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(1.6); } }
+.pin-pulse { transform-box: fill-box; transform-origin: center; animation: halo 2.2s ease-out infinite; }
 .hero { display: grid; gap: 1.1rem; padding-block: .5rem 2.5rem; }
-.hero-sign { padding: clamp(1.75rem, 5vw, 3.5rem); overflow: hidden; display: grid; gap: .9rem; background: var(--sign); color: var(--sign-ink); border-radius: 14px; position: relative; }
-.hero-name { font-weight: 900; font-size: clamp(2.1rem, 6vw, 4rem); line-height: .95; letter-spacing: -.045em; position: relative; }
-.hero-tag { font-family: var(--serif); font-style: italic; font-size: clamp(1.1rem, 2.6vw, 1.6rem); max-width: 36rem; position: relative; color: var(--sign-dim); }
+.hero .exit-tab { justify-self: start; margin-bottom: -1.1rem; margin-left: 1.5rem; position: relative; z-index: 1; }
+.hero-sign { padding: clamp(1.75rem, 5vw, 3.5rem); overflow: hidden; display: grid; gap: .9rem; }
+.hero-name { font-weight: 900; font-size: clamp(2.1rem, 9.6vw, 6.4rem); line-height: .9; letter-spacing: -.045em; overflow-wrap: anywhere; position: relative; }
+.hero-tag { font-family: var(--serif); font-style: italic; font-size: clamp(1.1rem, 2.6vw, 1.6rem); max-width: 36rem; position: relative; }
 .hero-ghost { position: absolute; right: -1rem; bottom: -3.5rem; font-weight: 900; font-size: clamp(7rem, 26vw, 16rem); line-height: 1; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 2px var(--sign-dim); opacity: .28; pointer-events: none; }
 .hero-arrows { list-style: none; margin: .5rem 0 0; padding: 1rem 0 0; border-top: 2px solid var(--sign-dim); display: grid; gap: .45rem; font-weight: 800; font-size: clamp(1rem, 2.4vw, 1.35rem); position: relative; }
 .vms { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; background: var(--vms); color: var(--vms-ink); border-radius: 12px; padding: 1rem 1.25rem; border: 3px solid var(--sign-deep); position: relative; overflow: hidden; }
@@ -54,14 +56,18 @@
 .vms-text { font-family: var(--mono); font-weight: 600; font-size: clamp(.95rem, 2.2vw, 1.2rem); text-transform: uppercase; letter-spacing: .04em; text-shadow: 0 0 10px var(--accent); overflow-wrap: anywhere; }
 .posts { list-style: none; margin: 0; padding: 0 0 .9rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: .75rem; }
 .post { background: var(--sign); color: var(--sign-ink); border-radius: 10px 10px 4px 4px; padding: 1rem .9rem 1.4rem; display: grid; gap: .35rem; outline: 2px solid var(--sign-ink); outline-offset: -6px; box-shadow: 0 18px 28px -20px var(--shadow); position: relative; }
-.post b { font-family: var(--mono); font-weight: 900; font-size: 1.8rem; line-height: 1; letter-spacing: -.03em; }
+.post::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 10px; height: 14px; margin-left: -5px; background: var(--ink); border-radius: 0 0 3px 3px; }
+.post b { font-weight: 900; font-size: 2.3rem; line-height: 1; letter-spacing: -.03em; }
+.post b small { font-size: .45em; opacity: .8; }
 .post span { font-weight: 800; font-size: var(--fs-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--sign-dim); }
-.legend { margin-top: 1rem; display: grid; grid-template-columns: 1fr; gap: 1rem 1.5rem; padding: 1.1rem 1.25rem; background: var(--surface); border: 2px solid var(--ink); border-radius: 4px; box-shadow: 6px 6px 0 var(--ink); }
+.legend { margin-top: 1rem; display: grid; grid-template-columns: auto 1fr; gap: 1rem 1.5rem; padding: 1.1rem 1.25rem; background: var(--surface); border: 2px solid var(--ink); border-radius: 4px; box-shadow: 6px 6px 0 var(--ink); }
 .key { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .5rem 1.25rem; font-size: var(--fs-s); }
 .key li { display: flex; align-items: center; gap: .6rem; }
+.key svg { flex: none; overflow: visible; }
 .key span { color: var(--muted); }
 .key span b { color: var(--ink); font-weight: 800; }
 .key-note { margin-top: .8rem; font-family: var(--serif); font-style: italic; color: var(--muted); }
+@media (max-width: 640px) { .legend { grid-template-columns: 1fr; } }
 .mono { font-family: var(--mono); }
 .hw-tag { display: inline-flex; align-items: center; gap: .35rem; font-weight: 800; font-size: var(--fs-xs); letter-spacing: .04em; text-transform: uppercase; padding: .15rem .55rem .1rem; border-radius: 999px; border: 2px solid var(--hw); }
 .hw-tag i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--hw); }
@@ -73,21 +79,27 @@
 .gd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .6rem; }
 .gd-meta time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
 .plate { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; background: var(--sign); color: var(--sign-ink); padding: .75rem .9rem; border-radius: 6px; outline: 2px solid var(--sign-ink); outline-offset: -5px; box-shadow: 0 10px 18px -12px var(--shadow); }
+.exit-stack { display: grid; justify-items: start; }
+.exit-sign { font-family: var(--mono); font-weight: 700; padding: 1.5rem 2rem .9rem; border-radius: 0 12px 12px 12px; }
+.shield { flex: none; filter: drop-shadow(0 8px 10px var(--shadow)); }
 .gd-body { display: grid; gap: 2rem; align-items: start; }
 @media (min-width: 900px) { .gd-body.has-box { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
 .prose { font-family: var(--serif); font-size: 1.125rem; line-height: 1.7; }
 .prose.big { font-size: 1.25rem; }
+.drop::first-letter { font-family: var(--serif); font-weight: 900; float: left; font-size: 4.2em; line-height: .8; padding: .08em .12em 0 0; color: var(--sign); }
 .essay { font-family: var(--serif); font-size: 1.05rem; line-height: 1.7; columns: 2 22rem; column-gap: 2.5rem; column-rule: 2px dashed var(--line-strong); }
 .essay p + p { margin-top: 1em; }
+.gd-count { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); margin-top: .8rem; }
 .g-list { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: .5rem; }
 .g-box { background: var(--surface); border: 2px solid var(--ink); border-radius: 4px; box-shadow: 6px 6px 0 var(--ink); padding: 1.1rem 1.25rem; display: grid; gap: .8rem; }
 .g-goal { font-weight: 900; font-size: 1.25rem; letter-spacing: -.02em; }
+.g-done { font-size: var(--fs-s); }
+.g-meter { display: grid; grid-template-columns: 8rem 1fr auto; gap: .6rem; align-items: center; font-size: var(--fs-xs); font-weight: 800; }
 .g-group { border-left: 6px solid var(--hw); padding-left: .8rem; display: grid; gap: .4rem; }
 .g-group h4 { font-size: var(--fs-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .g-group ul, .work-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
-.g-task { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: .5rem; align-items: baseline; font-size: var(--fs-s); }
-.g-task .meta { grid-column: 2; font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
-.g-task a { font-size: var(--fs-s); }
+.g-task { display: grid; grid-template-columns: 5rem 3.2rem minmax(0, 1fr); gap: .5rem; align-items: baseline; font-size: var(--fs-s); }
+.g-task a { font-size: var(--fs-xs); }
 /* Road work */
 .work { padding-block: 2.5rem 1rem; display: grid; gap: 1rem; }
 .work-title { display: flex; align-items: center; gap: 1rem; }
@@ -98,6 +110,8 @@
 /* Itinerary */
 .itinerary { padding-block: 2.5rem 1rem; display: grid; gap: 1rem; }
 .itin-major { display: grid; gap: 1.25rem; padding-block: 2rem; border-bottom: 6px double var(--line-strong); }
+.itin-head { display: flex; align-items: center; gap: 1rem; }
+.itin-head h3 { font-weight: 900; font-size: clamp(1.4rem, 3.5vw, 2.1rem); letter-spacing: -.03em; }
 .itin-rel { display: grid; gap: .6rem; padding: 1rem 1.1rem; background: var(--surface); border-radius: var(--r); border-left: 6px solid var(--line-strong); justify-items: start; scroll-margin-top: 1rem; }
 .itin-minor { border-left-color: var(--sign); }
 .itin-rel header { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem; }
@@ -106,12 +120,18 @@
 .itin-rel time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
 .itin-text { font-family: var(--serif); line-height: 1.65; max-width: 50rem; }
 .itin-text p + p { margin-top: .8em; }
+
+.g-task { grid-template-columns: 5rem minmax(0,1fr); }
+.g-task .meta { grid-column: 2; }
 .itin-history { padding-block: 1.25rem; border-bottom: 1px solid var(--line-strong); }
 .itin-history summary { cursor: pointer; font-weight: 900; font-size: var(--fs-l); }
-.sec-head { display: flex; align-items: center; gap: 1rem; margin-bottom: .5rem; }
-.sec-title h2 { font-weight: 900; font-size: 1.6rem; letter-spacing: -.02em; }
-.lane-rule { height: 2px; background: var(--line); margin-bottom: 1rem; }
-.site { padding-block: 2rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: var(--fs-s); color: var(--muted); }
+.hero-name { font-size: clamp(2.1rem,6vw,4rem); }
+.hero-sign { padding: 2rem; }
+.legend { grid-template-columns: 1fr; }
+.map-inner svg text { fill: var(--ink); }
+.post b { font-family: var(--mono); font-size: 1.8rem; }
+.topbar-tools { display: flex; align-items: center; gap: .4rem; }
+.palette-sel { font-family: var(--display); font-weight: 800; font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; padding: .45rem .7rem; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); cursor: pointer; }
 </style>
 </head>
 <body>
@@ -119,14 +139,14 @@
   <div class="topbar">
     <a class="brand" href="index.html" aria-label="Project Roadmap Atlas">
       <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2 36 8v12c0 9-7 15-16 18C11 35 4 29 4 20V8Z" style="fill:var(--sign);stroke:var(--sign-ink);stroke-width:2"/><text x="20" y="27" text-anchor="middle" style="fill:var(--sign-ink);font:900 17px var(--display)">R</text></svg>
-      <span class="brand-word">Project<small>Roadmap Atlas</small></span>
+      <span class="brand-word">Project<small>Roadmap</small></span>
     </a>
     <div class="topbar-side">
       <nav class="pages" aria-label="Roadmap pages">
-        <a href="index.html" class="active" aria-current="page">Map</a>
+        <a href="index.html" aria-current="page">Map</a>
         <a href="tasks.html">Tasks</a>
       </nav>
-      <p class="meta" style="font-family:var(--mono);font-size:var(--fs-xs);color:var(--muted)">Updated <time id="updated">…</time></p>
+      <p class="meta">Updated <time id="updated">…</time></p>
       <div class="topbar-tools">
         <select id="palette" class="palette-sel" aria-label="Theme palette">
           <option value="evergreen">Evergreen</option>
@@ -141,56 +161,52 @@
   </div>
 </header>
 <main>
-  <section class="wrap hero" aria-label="Current Destination">
-    <div class="hero-sign">
-      <div class="hero-ghost" id="hero-ghost" aria-hidden="true"></div>
-      <h1 class="hero-name">Destination <span id="hero-dest">Ahead</span></h1>
-      <p class="hero-tag" id="hero-tag">Versions are destinations. Tasks are the roadwork between them.</p>
+  <section class="wrap hero" aria-label="Where the project is">
+    <span class="exit-tab" id="exit-tab">Project Destination</span>
+    <div class="sign hero-sign">
+      <span class="hero-ghost" id="hero-ghost" aria-hidden="true"></span>
+      <h1 class="hero-name" id="hero-title">The release atlas</h1>
+      <p class="hero-tag" id="hero-tag"></p>
       <ul class="hero-arrows" id="hero-arrows"></ul>
     </div>
-    <div class="vms" role="status">
-      <span class="vms-lbl">VMS Sign</span>
-      <span class="vms-text" id="vms-text">Roadmap loading…</span>
-    </div>
-    <ul class="posts" id="posts"></ul>
+    <div class="vms" role="status"><span class="vms-lbl">Now</span><p class="vms-text" id="vms-text"></p></div>
+    <ul class="posts" id="posts" aria-label="Progress"></ul>
   </section>
-
-  <section class="map-sec" aria-label="Interactive Highway Map">
-    <div class="wrap map-ctl">
-      <button type="button" class="ctl ctl-now" id="go-now">Jump to Now</button>
-      <button type="button" class="ctl" id="go-start">Start (0.0.0)</button>
-      <button type="button" class="ctl" id="go-end">Horizon</button>
-      <button type="button" class="ctl" id="fit" aria-pressed="false">Fit Map</button>
-      <div class="hw-chips" id="hw-chips" role="group" aria-label="Filter highway spotlight"></div>
+  <section class="map-sec" aria-labelledby="map-h">
+    <div class="wrap sec-head">
+      <div class="sec-title"><span class="lbl">Every release, every subsystem</span><h2 id="map-h">The <em>highway</em></h2></div>
+      <div class="map-ctl">
+        <button type="button" class="ctl" id="go-start">⇤ Start</button>
+        <button type="button" class="ctl ctl-now" id="go-now">You are here</button>
+        <button type="button" class="ctl" id="go-end">Future ⇥</button>
+        <button type="button" class="ctl" id="fit" aria-pressed="false">Whole map</button>
+      </div>
     </div>
+    <div class="wrap"><div class="hw-chips" id="hw-chips" aria-label="Spotlight a highway"></div></div>
     <div class="map-frame" id="map-frame">
-      <div class="lane-tags" id="lane-tags" aria-hidden="true"></div>
-      <div class="map-scroll" id="map-scroll" tabindex="0" role="region" aria-label="Highway map canvas">
-        <div class="map-inner" id="map-inner"></div>
+      <div class="map-scroll" id="map-scroll" tabindex="0" role="region" aria-label="Highway map of every release. Scrolls sideways.">
+        <div class="map-inner" id="map-inner">
+          <div class="lane-tags" id="lane-tags" aria-hidden="true"></div>
+          <svg id="map" role="group" aria-label="Releases on the highway map"></svg>
+        </div>
       </div>
     </div>
   </section>
-
   <div class="wrap"><aside class="legend" id="legend" aria-label="Map key"></aside></div>
-  <section class="wrap guide" id="guide" aria-live="polite" aria-label="Release Guide"></section>
+  <section class="wrap guide" id="guide" aria-live="polite" aria-label="Travel guide"></section>
   <section class="wrap work" aria-labelledby="work-h">
-    <div class="sec-head">
-      <div class="sec-title"><span class="lbl">Implementation and verification</span><h2 id="work-h">Road <em>Work</em></h2></div>
-    </div>
-    <div class="lane-rule"></div>
-    <div class="work-cols" id="work-cols"></div>
+    <div class="sec-head"><div class="work-title"><div class="diamond" aria-hidden="true"><span><b>ROAD<br>WORK<br>AHEAD</b></span></div>
+      <div class="sec-title"><span class="lbl">Implementation and verification</span><h2 id="work-h">Road <em>work</em></h2></div></div></div>
+    <div class="lane-rule"></div><div class="work-cols" id="work-cols"></div>
   </section>
   <section class="wrap itinerary" aria-labelledby="itin-h">
-    <div class="sec-head">
-      <div class="sec-title"><span class="lbl">Every release, in full</span><h2 id="itin-h">The <em>Itinerary</em></h2></div>
-    </div>
-    <div class="lane-rule"></div>
-    <div id="itin"></div>
+    <div class="sec-head"><div class="sec-title"><span class="lbl">Every release, in full</span><h2 id="itin-h">The <em>itinerary</em></h2></div></div>
+    <div class="lane-rule"></div><div id="itin"></div>
   </section>
 </main>
 <footer class="wrap site">
-  <span>Source of truth: <code>roadmap.js</code>. Agents update it with every change.</span>
-  <span id="foot-links"><a href="tasks.html">Task board</a></span>
+  <span>Source of truth: <code>docs/roadmap/roadmap.js</code>. Agents update it with every commit.</span>
+  <span><a href="tasks.html">Task board</a> · <span id="foot-links"></span></span>
 </footer>
 <script src="roadmap.js?schema=4"></script>
 <script src="common.js?schema=4"></script>

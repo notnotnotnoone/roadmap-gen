@@ -209,7 +209,15 @@ def init_project(target: Path, name: str, repo: str, prd: str, hw_str: str, them
         if src.exists():
             shutil.copy2(src, target_scripts / fname)
 
-    # 4. Append agent instructions
+    # 4. Copy ready-to-use agent prompts
+    target_prompts = target / "prompts"
+    target_prompts.mkdir(parents=True, exist_ok=True)
+    template_prompts = TEMPLATE_DIR / "prompts"
+    if template_prompts.exists():
+        for src in template_prompts.glob("*.md"):
+            shutil.copy2(src, target_prompts / src.name)
+
+    # 5. Append agent instructions
     for guide_file in ["AGENTS.md", "CLAUDE.md"]:
         guide_path = target / guide_file
         if not guide_path.exists():
