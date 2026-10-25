@@ -94,14 +94,6 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
         "highways": highways,
         "releases": [
             {
-                "version": "0.0.1",
-                "status": "released",
-                "date": today,
-                "title": "Groundwork & Environment",
-                "highways": [first_hw["id"]],
-                "text": "Initial project foundation establishing repository layout, baseline dependencies, and development environment."
-            },
-            {
                 "version": "0.1.0",
                 "status": "next",
                 "title": "Foundation & Core Capabilities",
@@ -139,42 +131,28 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
         },
         "tasks": [
             {
-                "id": "repo-bootstrap",
+                "id": "baseline-architecture",
                 "stage": 1,
-                "title": f"Initialize {project_name} repository structure and baseline tooling",
-                "label": "Repo Bootstrap",
-                "area": first_area,
-                "targetRelease": "0.0.1",
-                "status": "done",
-                "shippedIn": "0.0.1",
-                "completed": today,
-                "stories": ["1"],
-                "refs": ["README.md"],
-                "notes": "Configured baseline directories and scripts."
-            },
-            {
-                "id": "core-architecture",
-                "stage": 1,
-                "title": "Implement core subsystem architecture and interfaces",
-                "label": "Core Architecture",
+                "title": f"Initialize {project_name} baseline architecture and project configuration",
+                "label": "Project Setup",
                 "area": first_area,
                 "targetRelease": "0.1.0",
                 "status": "doing",
                 "stories": ["1"],
-                "refs": [],
-                "notes": "Active engineering work."
+                "refs": ["README.md"],
+                "notes": "Setting up directory structure and essential files."
             },
             {
-                "id": "ui-prototype",
+                "id": "primary-workflow",
                 "stage": 2,
-                "title": "Build interactive user interface and view controls",
-                "label": "UI Prototype",
+                "title": "Build and verify primary user journey workflow",
+                "label": "Primary Workflow",
                 "area": second_area,
                 "targetRelease": "0.1.0",
                 "status": "next",
                 "stories": ["2"],
                 "refs": [],
-                "notes": "Verify primary user journey."
+                "notes": "Implement initial end-to-end functionality."
             }
         ],
         "decisions": [
@@ -184,9 +162,77 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
             { "status": "open", "text": "Scope creep during early exploration phase." }
         ],
         "log": [
-            { "date": today, "text": f"Shipped 0.0.1 Groundwork and initialized {project_name} roadmap." }
+            { "date": today, "text": f"Initialized {project_name} roadmap." }
         ]
     }
+
+
+def update_project(target: Path) -> int:
+    """Update roadmap infrastructure (viewer, scripts, prompts) while strictly preserving roadmap.js."""
+    target = target.resolve()
+    target_docs = target / "docs" / "roadmap"
+    target_scripts = target / "scripts"
+    target_prompts = target / "prompts"
+
+    if not (target_docs / "roadmap.js").exists():
+        print(f"Error: No existing roadmap found at {target_docs / 'roadmap.js'}")
+        print("Run without --update to initialize a new project roadmap.")
+        return 1
+
+    target_docs.mkdir(parents=True, exist_ok=True)
+    target_scripts.mkdir(parents=True, exist_ok=True)
+    target_prompts.mkdir(parents=True, exist_ok=True)
+
+    # 1. Update viewer files (NEVER touch roadmap.js)
+    template_docs = TEMPLATE_DIR / "docs" / "roadmap"
+    viewer_files = ["index.html", "tasks.html", "map-layout.js", "map.js", "common.js", "page.js", "theme.css"]
+    updated_viewer = []
+    for fname in viewer_files:
+        src = template_docs / fname
+        if src.exists():
+            shutil.copy2(src, target_docs / fname)
+            updated_viewer.append(fname)
+
+    # 2. Update scripts
+    template_scripts = TEMPLATE_DIR / "scripts"
+    updated_scripts = []
+    for fname in ["roadmap.py", "check_roadmap.py"]:
+        src = template_scripts / fname
+        if src.exists():
+            shutil.copy2(src, target_scripts / fname)
+            updated_scripts.append(fname)
+
+    # 3. Update prompts
+    template_prompts = TEMPLATE_DIR / "prompts"
+    updated_prompts = []
+    if template_prompts.exists():
+        for src in template_prompts.glob("*.md"):
+            shutil.copy2(src, target_prompts / src.name)
+            updated_prompts.append(src.name)
+
+    # 4. Check instructions in AGENTS.md / CLAUDE.md
+    for guide_file in ["AGENTS.md", "CLAUDE.md"]:
+        guide_path = target / guide_file
+        if guide_path.exists():
+            content = guide_path.read_text(encoding="utf-8")
+            if "roadmap.js" not in content:
+                guide_path.write_text(content.rstrip() + "\n\n" + AGENT_INSTRUCTIONS.strip() + "\n", encoding="utf-8")
+                print(f"[+] Added roadmap instructions to {guide_file}")
+
+    print("\n[+] Successfully updated Roadmap System infrastructure!")
+    print(f"   - Target:     {target}")
+    print(f"   - Preserved:  docs/roadmap/roadmap.js (intact)")
+    print(f"   - Viewer:     Updated {len(updated_viewer)} files in docs/roadmap/")
+    print(f"   - Scripts:    Updated {len(updated_scripts)} files in scripts/")
+    print(f"   - Prompts:    Updated {len(updated_prompts)} files in prompts/")
+
+    # 5. Run validation
+    check_script = target_scripts / "check_roadmap.py"
+    if check_script.exists():
+        import subprocess
+        res = subprocess.run([sys.executable, str(check_script)], cwd=str(target))
+        return res.returncode
+    return 0
 
 
 def init_project(target: Path, name: str, repo: str, prd: str, hw_str: str, theme: str, force: bool = False) -> int:
@@ -261,15 +307,19 @@ def init_project(target: Path, name: str, repo: str, prd: str, hw_str: str, them
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Initialize the Roadmap System in any project.")
+    parser = argparse.ArgumentParser(description="Initialize or update the Roadmap System in any project.")
     parser.add_argument("--target", default=".", help="Target project directory (default: current directory)")
+    parser.add_argument("--update", action="store_true", help="Update viewer, layout, scripts, and prompts while strictly preserving roadmap.js")
     parser.add_argument("--name", default="Project", help="Project display name")
     parser.add_argument("--repo", default="", help="Git repository URL")
     parser.add_argument("--prd", default="", help="PRD or issue tracker link")
     parser.add_argument("--highways", default="", help="Highways & areas (e.g., 'core:engine,logic ui:frontend,styles')")
     parser.add_argument("--theme", default="evergreen", choices=["evergreen", "blueprint", "neon", "minimal", "sunset"], help="Color theme")
-    parser.add_argument("--force", action="store_true", help="Overwrite existing files")
+    parser.add_argument("--force", action="store_true", help="Overwrite existing files (for new init)")
     args = parser.parse_args()
+
+    if args.update:
+        return update_project(target=Path(args.target))
 
     return init_project(
         target=Path(args.target),
