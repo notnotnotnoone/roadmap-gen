@@ -10,17 +10,27 @@ window.ROADMAP_DATA = {
     {
       "id": "core",
       "title": "Engine & CLI",
-      "areas": ["engine", "cli"]
+      "areas": [
+        "engine",
+        "cli"
+      ]
     },
     {
       "id": "ui",
       "title": "Highway Map & Board",
-      "areas": ["map", "board", "theme"]
+      "areas": [
+        "map",
+        "board",
+        "theme"
+      ]
     },
     {
       "id": "infra",
       "title": "Scaffolder & Docs",
-      "areas": ["scaffolder", "docs"]
+      "areas": [
+        "scaffolder",
+        "docs"
+      ]
     }
   ],
   "releases": [
@@ -69,8 +79,13 @@ window.ROADMAP_DATA = {
       "area": "engine",
       "targetRelease": "0.1.0",
       "status": "done",
-      "stories": ["2"],
-      "refs": ["scripts/roadmap.py", "scripts/check_roadmap.py"],
+      "stories": [
+        "2"
+      ],
+      "refs": [
+        "scripts/roadmap.py",
+        "scripts/check_roadmap.py"
+      ],
       "completed": "2026-10-24",
       "notes": "Decoupled project name, window variables, and added flexible release check rules."
     },
@@ -82,8 +97,13 @@ window.ROADMAP_DATA = {
       "area": "theme",
       "targetRelease": "0.1.0",
       "status": "done",
-      "stories": ["1"],
-      "refs": ["docs/roadmap/theme.css", "docs/roadmap/common.js"],
+      "stories": [
+        "1"
+      ],
+      "refs": [
+        "docs/roadmap/theme.css",
+        "docs/roadmap/common.js"
+      ],
       "completed": "2026-10-24",
       "notes": "Added interactive palette selector and full Day/Night mode support across all themes."
     },
@@ -95,8 +115,13 @@ window.ROADMAP_DATA = {
       "area": "scaffolder",
       "targetRelease": "0.1.0",
       "status": "done",
-      "stories": ["1", "2"],
-      "refs": ["init_roadmap.py"],
+      "stories": [
+        "1",
+        "2"
+      ],
+      "refs": [
+        "init_roadmap.py"
+      ],
       "completed": "2026-10-24",
       "notes": "Tested in sandbox; handles project names, custom highways, and sets up AGENTS.md."
     },
@@ -108,8 +133,13 @@ window.ROADMAP_DATA = {
       "area": "docs",
       "targetRelease": "0.1.0",
       "status": "done",
-      "stories": ["2"],
-      "refs": ["README.md", "AGENTS.md"],
+      "stories": [
+        "2"
+      ],
+      "refs": [
+        "README.md",
+        "AGENTS.md"
+      ],
       "completed": "2026-10-24",
       "notes": "Explicitly instructed agents that they have full permission to modify or rewrite the HTML file system."
     }
@@ -131,6 +161,10 @@ window.ROADMAP_DATA = {
     }
   ],
   "log": [
+    {
+      "date": "2026-10-24",
+      "text": "Published Roadmap-Gen to GitHub with live GitHub Pages"
+    },
     {
       "date": "2026-10-24",
       "text": "Completed core implementation of Roadmap-Gen: engine extraction, multi-theme CSS, scaffolder, and agent guides."
