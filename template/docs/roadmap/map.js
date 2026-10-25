@@ -70,13 +70,32 @@
 
   // The sign for a destination that has not shipped: version and title, with a stem down to the lanes it uses.
   function drawDestination(L, e) {
-    const r = e.release, title = window.RM.data.releasePlans[r.version]?.title || r.title;
-    const ys = e.lanes.map((id) => laneY(L, id));
+    const R = window.RM, r = e.release, title = R.data.releasePlans[r.version]?.title || r.title;
+    const hws = e.lanes.length ? e.lanes : L.lanes.map((l) => l.id);
+    const ys = hws.map((id) => (e.bundle && e.bundle[id] != null ? e.bundle[id] : laneY(L, id)));
+    const y0 = Math.min(...ys), y1 = Math.max(...ys), x = e.x;
     let body = "";
+
+    if (e.kind === "major") {
+      const w = 44, top = y0 - 18, h = y1 - y0 + 36;
+      const cap = `<rect x="${x - w / 2}" y="${top}" width="${w}" height="${h}" rx="${w / 2}"`;
+      body += `${cap} style="fill:var(--surface);stroke:var(--sign);stroke-width:3.5;stroke-dasharray:6 4"/>`;
+      hws.forEach((id, k) => { body += `<circle cx="${x}" cy="${ys[k]}" r="5.5" style="fill:var(--surface);stroke:${col(id)};stroke-width:2.5"/>`; });
+      // Shield in the gap above the bundle.
+      const sy = top - 104;
+      const majorNum = String(R.parseVer(e.version)[0]);
+      body += `<g transform="translate(${x - 28} ${sy})"><path d="M28 0 56 10v20c0 16-12 26-28 32C12 56 0 46 0 30V10Z" style="fill:var(--sign);stroke:var(--sign-ink);stroke-width:3"/><path d="M4 12h48" style="stroke:var(--sign-ink);stroke-width:2"/>${T(28, 44, majorNum, "fill:var(--sign-ink);font:900 26px Overpass", 'text-anchor="middle"')}</g>`;
+      // Overhead gantry sign for major destination
+      const line1 = `MAJOR · ${e.version}`;
+      const w2 = Math.max(width(title, F.gantry) + 44, 210), gy = L.G.rows.gantry;
+      body += `<g class="gantry"><path d="M${x} ${gy + 52} V${sy}" style="stroke:var(--ink);stroke-width:2"/><rect x="${x - w2 / 2}" y="${gy}" width="${w2}" height="52" rx="9" style="fill:var(--sign);stroke:${r.status === "next" ? "var(--accent)" : "var(--surface)"};stroke-width:2.5"/><rect x="${x - w2 / 2 + 5}" y="${gy + 5}" width="${w2 - 10}" height="42" rx="6" style="fill:none;stroke:var(--sign-dim);stroke-width:1.5"/>${T(x, gy + 21, line1, `fill:var(--sign-dim);font:${F.small};letter-spacing:.14em`, 'text-anchor="middle"')}${T(x, gy + 40, title, `fill:var(--sign-ink);font:${F.gantry}`, 'text-anchor="middle"')}</g>`;
+      const hit = [x - Math.max(w, w2) / 2 - 8, gy - 8, Math.max(w, w2) + 16, y1 - gy + 48];
+      return group(e.id, hws, `${r.version} · ${title} · ${r.status}`, body, hit);
+    }
+
     if (ys.length) {
-      const y0 = Math.min(...ys), y1 = Math.max(...ys);
       body += `<path d="M${e.x} 178 V${y0}" style="stroke:var(--line-strong);stroke-width:2"/>`;
-      if (ys.length > 1) body += `<path d="M${e.x} ${y0} V${y1}" style="stroke:var(--sign);stroke-width:${e.kind === "major" ? 22 : 13};stroke-linecap:round"/>`;
+      if (ys.length > 1) body += `<path d="M${e.x} ${y0} V${y1}" style="stroke:var(--sign);stroke-width:13;stroke-linecap:round"/>`;
       e.lanes.forEach((id, k) => { body += `<circle cx="${e.x}" cy="${ys[k]}" r="10" style="fill:var(--surface);stroke:${col(id)};stroke-width:3"/>`; });
     }
     body += `<rect x="${e.x - 127}" y="80" width="190" height="98" rx="9" style="fill:var(--sign);stroke:${r.status === "next" ? "var(--accent)" : "var(--surface)"};stroke-width:3"/><rect x="${e.x - 121}" y="86" width="178" height="86" rx="5" style="fill:none;stroke:var(--sign-dim)"/>`;

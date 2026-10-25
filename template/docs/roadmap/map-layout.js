@@ -114,7 +114,7 @@
     });
     for (const s of futureStops) s.y = laneY[s.lane] + s.row * G.taskPitch + (s.branch ? 22 : 0);
 
-    const majors = cols.filter((c) => c.kind === "major");
+    const majors = [...cols, ...destinations].filter((c) => c.kind === "major");
     for (const e of majors) {
       const open = highways.filter((h) => isOpen(h, e.version));
       const mid = open.reduce((s, h) => s + laneY[h.id], 0) / open.length;

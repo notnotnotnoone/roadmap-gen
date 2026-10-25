@@ -119,20 +119,12 @@ def check(data: dict) -> list[str]:
             if not isinstance(text, str) or "\n" in text or len(sentences(text)) != 1 or len(text.split()) > 50 or not text.rstrip().endswith((".", "!", "?")):
                 errors.append(f"{where}: patch writing needs one sentence, at most 50 words")
         elif kind == "minor":
-            if status == "released":
-                if not isinstance(text, str) or "\n" in text or not 50 <= len(text.split()) <= 220 or len(sentences(text)) < 2:
-                    errors.append(f"{where}: shipped minor release writing needs one paragraph, 50–220 words")
-            else:
-                if not isinstance(text, str) or not text.strip():
-                    errors.append(f"{where}: minor needs summary text")
+            if not isinstance(text, str) or "\n" in text or not 50 <= len(text.split()) <= 220 or len(sentences(text)) < 2:
+                errors.append(f"{where}: minor writing needs one paragraph, 50–220 words")
         else:
-            if status == "released":
-                essay = r.get("essay", [])
-                if not isinstance(essay, list) or len(essay) < 4 or not all(isinstance(p, str) and p.strip() for p in essay) or sum(len(p.split()) for p in essay) < 450:
-                    errors.append(f"{where}: shipped major writing needs four paragraphs and at least 450 words")
-            else:
-                if not (r.get("essay") or r.get("text")):
-                    errors.append(f"{where}: major needs an essay or summary text")
+            essay = r.get("essay", [])
+            if not isinstance(essay, list) or len(essay) < 4 or not all(isinstance(p, str) and p.strip() for p in essay) or sum(len(p.split()) for p in essay) < 450:
+                errors.append(f"{where}: major writing needs four paragraphs and at least 450 words")
     if next_count > 1: errors.append("at most one release can be next")
 
     plans = data.get("releasePlans", {})
