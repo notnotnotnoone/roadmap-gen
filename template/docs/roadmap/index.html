@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,600&family=Overpass:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800;1,900&family=Overpass+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="theme.css">
+<style>
+.map-sec { display: grid; gap: 1rem; padding-block: 1rem 0; }
+.map-ctl { display: flex; flex-wrap: wrap; gap: .4rem; }
+.ctl { font-weight: 800; font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; padding: .5rem .85rem .4rem; border-radius: 999px; border: 2px solid var(--ink); background: var(--surface); cursor: pointer; }
+.ctl:hover { background: var(--ink); color: var(--paper); }
+.ctl[aria-pressed="true"] { background: var(--sign); color: var(--sign-ink); border-color: var(--sign); }
+.ctl-now { border-color: var(--accent); color: var(--accent-ink); }
+.hw-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.hw-chip { display: inline-flex; align-items: center; gap: .45rem; font-weight: 900; font-style: italic; font-size: var(--fs-s); text-transform: uppercase; letter-spacing: .04em; padding: .4rem .8rem .3rem; border-radius: 999px; border: 2px solid var(--hw); color: var(--ink); background: var(--surface); cursor: pointer; }
+.hw-chip i { width: 14px; height: 14px; border-radius: 50%; background: var(--hw); }
+.hw-chip[aria-pressed="true"] { background: var(--hw); color: var(--sign-ink); }
+.map-frame { position: relative; margin-inline: 16px; border-radius: 18px; border: 2px solid var(--line-strong); overflow: hidden;
+  background: linear-gradient(90deg, transparent 32.9%, rgb(0 0 0 / .045) 33.3%, transparent 33.8%, transparent 66.2%, rgb(0 0 0 / .045) 66.6%, transparent 67%), var(--paper-2);
+  box-shadow: 0 30px 60px -40px var(--shadow), inset 0 0 0 6px var(--surface); }
+@media (min-width: 760px) { .map-frame { margin-inline: 32px; } }
+.map-scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; cursor: grab; }
+.map-scroll.dragging { cursor: grabbing; user-select: none; }
+.map-scroll:focus-visible { outline-offset: -4px; }
+.map-inner { position: relative; }
+.map-inner svg { position: absolute; inset: 0; overflow: visible; }
+.lane-tags { position: sticky; left: 0; width: 150px; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .2s; }
+.lane-tags.show { opacity: 1; }
+.lane-tag { position: absolute; left: 10px; background: var(--hw); color: var(--sign-ink); font-weight: 900; font-style: italic; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .04em; padding: .45rem .75rem .35rem; border-radius: 999px; box-shadow: 0 8px 18px -8px var(--shadow), 0 0 0 3px var(--surface); white-space: nowrap; }
+.fit .map-scroll { overflow: hidden; cursor: default; }
+.fit .map-inner { width: 100% !important; height: auto !important; }
+.fit .map-inner svg { position: static; width: 100%; height: auto; }
+.fit .lane-tags { display: none; }
+.stn { cursor: pointer; outline: none; }
+.stn .hit { transition: stroke .15s; }
+.stn:hover .hit, .stn:focus-visible .hit { stroke: var(--ink); stroke-width: 2; stroke-dasharray: 3 3; }
+.stn.on .hit { stroke: var(--accent); stroke-width: 3; stroke-dasharray: none; }
+.dim { opacity: .18; transition: opacity .2s; }
+.halo { transform-box: fill-box; transform-origin: center; animation: halo 1.8s ease-out infinite; }
+@keyframes halo { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(1.6); } }
+.hero { display: grid; gap: 1.1rem; padding-block: .5rem 2.5rem; }
+.hero-sign { padding: clamp(1.75rem, 5vw, 3.5rem); overflow: hidden; display: grid; gap: .9rem; background: var(--sign); color: var(--sign-ink); border-radius: 14px; position: relative; }
+.hero-name { font-weight: 900; font-size: clamp(2.1rem, 6vw, 4rem); line-height: .95; letter-spacing: -.045em; position: relative; }
+.hero-tag { font-family: var(--serif); font-style: italic; font-size: clamp(1.1rem, 2.6vw, 1.6rem); max-width: 36rem; position: relative; color: var(--sign-dim); }
+.hero-ghost { position: absolute; right: -1rem; bottom: -3.5rem; font-weight: 900; font-size: clamp(7rem, 26vw, 16rem); line-height: 1; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 2px var(--sign-dim); opacity: .28; pointer-events: none; }
+.hero-arrows { list-style: none; margin: .5rem 0 0; padding: 1rem 0 0; border-top: 2px solid var(--sign-dim); display: grid; gap: .45rem; font-weight: 800; font-size: clamp(1rem, 2.4vw, 1.35rem); position: relative; }
+.vms { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; background: var(--vms); color: var(--vms-ink); border-radius: 12px; padding: 1rem 1.25rem; border: 3px solid var(--sign-deep); position: relative; overflow: hidden; }
+.vms::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle, transparent 55%, var(--vms) 60%) 0 0 / 4px 4px; opacity: .55; }
+.vms-lbl { font-family: var(--mono); font-weight: 700; font-size: var(--fs-xs); letter-spacing: .2em; text-transform: uppercase; border: 2px solid currentColor; border-radius: 6px; padding: .25rem .5rem; }
+.vms-text { font-family: var(--mono); font-weight: 600; font-size: clamp(.95rem, 2.2vw, 1.2rem); text-transform: uppercase; letter-spacing: .04em; text-shadow: 0 0 10px var(--accent); overflow-wrap: anywhere; }
+.posts { list-style: none; margin: 0; padding: 0 0 .9rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: .75rem; }
+.post { background: var(--sign); color: var(--sign-ink); border-radius: 10px 10px 4px 4px; padding: 1rem .9rem 1.4rem; display: grid; gap: .35rem; outline: 2px solid var(--sign-ink); outline-offset: -6px; box-shadow: 0 18px 28px -20px var(--shadow); position: relative; }
+.post b { font-family: var(--mono); font-weight: 900; font-size: 1.8rem; line-height: 1; letter-spacing: -.03em; }
+.post span { font-weight: 800; font-size: var(--fs-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--sign-dim); }
+.legend { margin-top: 1rem; display: grid; grid-template-columns: 1fr; gap: 1rem 1.5rem; padding: 1.1rem 1.25rem; background: var(--surface); border: 2px solid var(--ink); border-radius: 4px; box-shadow: 6px 6px 0 var(--ink); }
+.key { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .5rem 1.25rem; font-size: var(--fs-s); }
+.key li { display: flex; align-items: center; gap: .6rem; }
+.key span { color: var(--muted); }
+.key span b { color: var(--ink); font-weight: 800; }
+.key-note { margin-top: .8rem; font-family: var(--serif); font-style: italic; color: var(--muted); }
+.mono { font-family: var(--mono); }
+.hw-tag { display: inline-flex; align-items: center; gap: .35rem; font-weight: 800; font-size: var(--fs-xs); letter-spacing: .04em; text-transform: uppercase; padding: .15rem .55rem .1rem; border-radius: 999px; border: 2px solid var(--hw); }
+.hw-tag i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--hw); }
+/* Travel guide */
+.guide { padding-block: 2.5rem 1rem; }
+.gd { display: grid; gap: 1.5rem; }
+.gd-head { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.gd-head h3 { font-weight: 900; font-size: clamp(1.6rem, 4vw, 2.6rem); line-height: 1.05; letter-spacing: -.03em; }
+.gd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .6rem; }
+.gd-meta time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
+.plate { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; background: var(--sign); color: var(--sign-ink); padding: .75rem .9rem; border-radius: 6px; outline: 2px solid var(--sign-ink); outline-offset: -5px; box-shadow: 0 10px 18px -12px var(--shadow); }
+.gd-body { display: grid; gap: 2rem; align-items: start; }
+@media (min-width: 900px) { .gd-body.has-box { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
+.prose { font-family: var(--serif); font-size: 1.125rem; line-height: 1.7; }
+.prose.big { font-size: 1.25rem; }
+.essay { font-family: var(--serif); font-size: 1.05rem; line-height: 1.7; columns: 2 22rem; column-gap: 2.5rem; column-rule: 2px dashed var(--line-strong); }
+.essay p + p { margin-top: 1em; }
+.g-list { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: .5rem; }
+.g-box { background: var(--surface); border: 2px solid var(--ink); border-radius: 4px; box-shadow: 6px 6px 0 var(--ink); padding: 1.1rem 1.25rem; display: grid; gap: .8rem; }
+.g-goal { font-weight: 900; font-size: 1.25rem; letter-spacing: -.02em; }
+.g-group { border-left: 6px solid var(--hw); padding-left: .8rem; display: grid; gap: .4rem; }
+.g-group h4 { font-size: var(--fs-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.g-group ul, .work-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+.g-task { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: .5rem; align-items: baseline; font-size: var(--fs-s); }
+.g-task .meta { grid-column: 2; font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
+.g-task a { font-size: var(--fs-s); }
+/* Road work */
+.work { padding-block: 2.5rem 1rem; display: grid; gap: 1rem; }
+.work-title { display: flex; align-items: center; gap: 1rem; }
+.work-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.work-col { border-top: 8px solid var(--hw); background: var(--surface); border-radius: 0 0 var(--r) var(--r); padding: 1rem; display: grid; gap: .6rem; align-content: start; box-shadow: 0 14px 24px -20px var(--shadow); }
+.work-col h3 { font-weight: 900; font-style: italic; text-transform: uppercase; font-size: var(--fs-m); letter-spacing: .03em; }
+.clear { font-family: var(--serif); font-style: italic; color: var(--muted); }
+/* Itinerary */
+.itinerary { padding-block: 2.5rem 1rem; display: grid; gap: 1rem; }
+.itin-major { display: grid; gap: 1.25rem; padding-block: 2rem; border-bottom: 6px double var(--line-strong); }
+.itin-rel { display: grid; gap: .6rem; padding: 1rem 1.1rem; background: var(--surface); border-radius: var(--r); border-left: 6px solid var(--line-strong); justify-items: start; scroll-margin-top: 1rem; }
+.itin-minor { border-left-color: var(--sign); }
+.itin-rel header { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem; }
+.itin-rel .ver { font-weight: 700; }
+.itin-rel h4 { font-weight: 800; font-size: var(--fs-l); }
+.itin-rel time { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
+.itin-text { font-family: var(--serif); line-height: 1.65; max-width: 50rem; }
+.itin-text p + p { margin-top: .8em; }
+.itin-history { padding-block: 1.25rem; border-bottom: 1px solid var(--line-strong); }
+.itin-history summary { cursor: pointer; font-weight: 900; font-size: var(--fs-l); }
+.sec-head { display: flex; align-items: center; gap: 1rem; margin-bottom: .5rem; }
+.sec-title h2 { font-weight: 900; font-size: 1.6rem; letter-spacing: -.02em; }
+.lane-rule { height: 2px; background: var(--line); margin-bottom: 1rem; }
+.site { padding-block: 2rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: var(--fs-s); color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <div class="topbar">
+    <a class="brand" href="index.html" aria-label="Project Roadmap Atlas">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2 36 8v12c0 9-7 15-16 18C11 35 4 29 4 20V8Z" style="fill:var(--sign);stroke:var(--sign-ink);stroke-width:2"/><text x="20" y="27" text-anchor="middle" style="fill:var(--sign-ink);font:900 17px var(--display)">R</text></svg>
+      <span class="brand-word">Project<small>Roadmap Atlas</small></span>
+    </a>
+    <div class="topbar-side">
+      <nav class="pages" aria-label="Roadmap pages">
+        <a href="index.html" class="active" aria-current="page">Map</a>
+        <a href="tasks.html">Tasks</a>
+      </nav>
+      <p class="meta" style="font-family:var(--mono);font-size:var(--fs-xs);color:var(--muted)">Updated <time id="updated">…</time></p>
+      <div class="topbar-tools">
+        <select id="palette" class="palette-sel" aria-label="Theme palette">
+          <option value="evergreen">Evergreen</option>
+          <option value="blueprint">Blueprint</option>
+          <option value="neon">Cyberpunk Neon</option>
+          <option value="minimal">Minimal</option>
+          <option value="sunset">Sunset Amber</option>
+        </select>
+        <button type="button" class="theme-btn" id="theme"></button>
+      </div>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="wrap hero" aria-label="Current Destination">
+    <div class="hero-sign">
+      <div class="hero-ghost" id="hero-ghost" aria-hidden="true"></div>
+      <h1 class="hero-name">Destination <span id="hero-dest">Ahead</span></h1>
+      <p class="hero-tag" id="hero-tag">Versions are destinations. Tasks are the roadwork between them.</p>
+      <ul class="hero-arrows" id="hero-arrows"></ul>
+    </div>
+    <div class="vms" role="status">
+      <span class="vms-lbl">VMS Sign</span>
+      <span class="vms-text" id="vms-text">Roadmap loading…</span>
+    </div>
+    <ul class="posts" id="posts"></ul>
+  </section>
+
+  <section class="map-sec" aria-label="Interactive Highway Map">
+    <div class="wrap map-ctl">
+      <button type="button" class="ctl ctl-now" id="go-now">Jump to Now</button>
+      <button type="button" class="ctl" id="go-start">Start (0.0.0)</button>
+      <button type="button" class="ctl" id="go-end">Horizon</button>
+      <button type="button" class="ctl" id="fit" aria-pressed="false">Fit Map</button>
+      <div class="hw-chips" id="hw-chips" role="group" aria-label="Filter highway spotlight"></div>
+    </div>
+    <div class="map-frame" id="map-frame">
+      <div class="lane-tags" id="lane-tags" aria-hidden="true"></div>
+      <div class="map-scroll" id="map-scroll" tabindex="0" role="region" aria-label="Highway map canvas">
+        <div class="map-inner" id="map-inner"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><aside class="legend" id="legend" aria-label="Map key"></aside></div>
+  <section class="wrap guide" id="guide" aria-live="polite" aria-label="Release Guide"></section>
+  <section class="wrap work" aria-labelledby="work-h">
+    <div class="sec-head">
+      <div class="sec-title"><span class="lbl">Implementation and verification</span><h2 id="work-h">Road <em>Work</em></h2></div>
+    </div>
+    <div class="lane-rule"></div>
+    <div class="work-cols" id="work-cols"></div>
+  </section>
+  <section class="wrap itinerary" aria-labelledby="itin-h">
+    <div class="sec-head">
+      <div class="sec-title"><span class="lbl">Every release, in full</span><h2 id="itin-h">The <em>Itinerary</em></h2></div>
+    </div>
+    <div class="lane-rule"></div>
+    <div id="itin"></div>
+  </section>
+</main>
+<footer class="wrap site">
+  <span>Source of truth: <code>roadmap.js</code>. Agents update it with every change.</span>
+  <span id="foot-links"><a href="tasks.html">Task board</a></span>
+</footer>
+<script src="roadmap.js?schema=4"></script>
+<script src="common.js?schema=4"></script>
+<script src="map-layout.js?schema=4"></script>
+<script src="map.js?schema=4"></script>
+<script src="page.js?schema=4"></script>
+</body>
+</html>

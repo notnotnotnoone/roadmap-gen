@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+build/
+dist/
+
+# Generated transient roadmap briefs
+docs/roadmap/roadmap-brief*.md
+template/docs/roadmap/roadmap-brief*.md
+
+# OS
+.DS_Store
+Thumbs.db
