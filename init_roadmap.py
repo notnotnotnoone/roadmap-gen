@@ -86,7 +86,7 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
     return {
         "schema": 4,
         "project": project_name,
-        "now": "Initial setup and architecture",
+        "now": f"Building {project_name} baseline capabilities",
         "prd": prd or (repo + "#readme" if repo else "https://github.com"),
         "repo": repo or "https://github.com",
         "updated": today,
@@ -94,9 +94,17 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
         "highways": highways,
         "releases": [
             {
+                "version": "0.0.1",
+                "status": "released",
+                "date": today,
+                "title": "Groundwork & Environment",
+                "highways": [first_hw["id"]],
+                "text": "Initial project foundation establishing repository layout, baseline dependencies, and development environment."
+            },
+            {
                 "version": "0.1.0",
                 "status": "next",
-                "title": "Foundation & Initial Spike",
+                "title": "Foundation & Core Capabilities",
                 "text": f"The initial release establishes the architectural foundation of {project_name}, configuring the baseline repository structure, core modules, and essential workflows. It verifies primary operational assumptions through lightweight end-to-end integration checks while proving the development loop. Early validation gates confirm system stability, reproducible builds, and seamless collaboration between human guidance and autonomous agent execution."
             },
             {
@@ -113,14 +121,14 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
         ],
         "releasePlans": {
             "0.1.0": {
-                "title": "Foundation & Initial Spike",
-                "goal": f"Establish the core foundation of {project_name}.",
+                "title": "Foundation & Core Capabilities",
+                "goal": f"Establish the core foundation and primary workflows of {project_name}.",
                 "done_when": "All initial tasks pass verification and core functionality is demonstrated.",
                 "scope": "contained"
             },
             "1.0.0": {
                 "title": "Initial Production Release",
-                "goal": "Deliver fully validated production capability.",
+                "goal": "Deliver fully validated production capability with full documentation.",
                 "done_when": "Feature complete, thoroughly tested, and documented.",
                 "scope": "medium"
             }
@@ -131,22 +139,36 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
         },
         "tasks": [
             {
-                "id": "project-setup",
+                "id": "repo-bootstrap",
                 "stage": 1,
-                "title": f"Initialize {project_name} baseline architecture",
-                "label": "Project Setup",
+                "title": f"Initialize {project_name} repository structure and baseline tooling",
+                "label": "Repo Bootstrap",
+                "area": first_area,
+                "targetRelease": "0.0.1",
+                "status": "done",
+                "shippedIn": "0.0.1",
+                "completed": today,
+                "stories": ["1"],
+                "refs": ["README.md"],
+                "notes": "Configured baseline directories and scripts."
+            },
+            {
+                "id": "core-architecture",
+                "stage": 1,
+                "title": "Implement core subsystem architecture and interfaces",
+                "label": "Core Architecture",
                 "area": first_area,
                 "targetRelease": "0.1.0",
                 "status": "doing",
                 "stories": ["1"],
-                "refs": ["README.md"],
-                "notes": "Setting up directory layout and initial scripts."
+                "refs": [],
+                "notes": "Active engineering work."
             },
             {
-                "id": "core-workflow",
+                "id": "ui-prototype",
                 "stage": 2,
-                "title": "Implement first end-to-end prototype workflow",
-                "label": "Core Workflow",
+                "title": "Build interactive user interface and view controls",
+                "label": "UI Prototype",
                 "area": second_area,
                 "targetRelease": "0.1.0",
                 "status": "next",
@@ -159,10 +181,10 @@ def create_initial_data(project_name: str, repo: str, prd: str, highways: list[d
             { "date": today, "text": "Adopted the Roadmap System for zero-terminal agent-human coordination." }
         ],
         "risks": [
-            { "status": "open", "text": "Scope creep during early exploration." }
+            { "status": "open", "text": "Scope creep during early exploration phase." }
         ],
         "log": [
-            { "date": today, "text": f"Initialized {project_name} roadmap." }
+            { "date": today, "text": f"Shipped 0.0.1 Groundwork and initialized {project_name} roadmap." }
         ]
     }
 

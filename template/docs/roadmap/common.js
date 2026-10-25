@@ -88,6 +88,19 @@
     "#0B6E4B", "#5E3BA3", "#0CA1A7", "#D97706", "#2563EB", "#DC2626", "#7C3AED", "#059669"
   ];
 
+  // Dynamically register --hw-<id> CSS variables for any user-defined highways
+  try {
+    const styleEl = document.createElement("style");
+    let cssVars = ":root {\n";
+    highways.forEach((h, idx) => {
+      const c = h.color || DEFAULT_PALETTE_COLORS[idx % DEFAULT_PALETTE_COLORS.length];
+      cssVars += `  --hw-${h.id}: ${c};\n`;
+    });
+    cssVars += "}\n";
+    styleEl.textContent = cssVars;
+    document.head.appendChild(styleEl);
+  } catch {}
+
   const hwColor = (id) => {
     const h = hwById[id];
     if (h && h.color) return h.color;

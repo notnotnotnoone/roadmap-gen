@@ -5,7 +5,7 @@ window.ROADMAP_DATA = {
   "prd": "https://github.com/notnotnotnoone/roadmap-gen#readme",
   "repo": "https://github.com/notnotnotnoone/roadmap-gen",
   "updated": "2026-10-24",
-  "activeRelease": "0.1.0",
+  "activeRelease": "1.0.0",
   "highways": [
     {
       "id": "core",
@@ -36,13 +36,20 @@ window.ROADMAP_DATA = {
   "releases": [
     {
       "version": "0.1.0",
-      "status": "next",
+      "status": "released",
       "title": "Universal Visual Roadmap Engine",
-      "text": "The initial release of the universal roadmap system generalizes the visual highway atlas and interactive task board into an in-repo, zero-dependency engine suitable for any software project. It establishes the foundational mental model where versions are milestones and tasks represent active roadwork, completely removing terminal friction for human creators through automated agent coordination. With built-in theme support across five distinct palettes and offline browser accessibility, development teams can inspect progress transparently without reliance on external project management infrastructure."
+      "text": "The initial release of the universal roadmap system generalizes the visual highway atlas and interactive task board into an in-repo, zero-dependency engine suitable for any software project. It establishes the foundational mental model where versions are milestones and tasks represent active roadwork, completely removing terminal friction for human creators through automated agent coordination. With built-in theme support across five distinct palettes and offline browser accessibility, development teams can inspect progress transparently without reliance on external project management infrastructure.",
+      "date": "2026-10-24",
+      "validation": "All schema checks and visual map rendering verified across themes.",
+      "highways": [
+        "core",
+        "ui",
+        "infra"
+      ]
     },
     {
       "version": "1.0.0",
-      "status": "planned",
+      "status": "next",
       "title": "Public Open Source Release",
       "essay": [
         "The 1.0.0 release marks the complete realization of the universal roadmap architecture, delivering a transformative approach to developer-agent collaboration across modern software engineering workflows. By reimagining project planning not as a detached external issue tracker but as an immutable, Git-versioned artifact living directly alongside application source code, this release eliminates the cognitive dissonance between documentation, task planning, and actual execution. Teams and solo developers no longer need to navigate heavyweight commercial project management suites or maintain complex API synchronizations to track their engineering velocity across distributed branches. Instead, the roadmap serves as a living, transparent contract between human creative vision and autonomous implementation, establishing an intuitive operational cadence where every single code commit permanently records its architectural contribution directly within repository history.",
@@ -87,7 +94,8 @@ window.ROADMAP_DATA = {
         "scripts/check_roadmap.py"
       ],
       "completed": "2026-10-24",
-      "notes": "Decoupled project name, window variables, and added flexible release check rules."
+      "notes": "Decoupled project name, window variables, and added flexible release check rules.",
+      "shippedIn": "0.1.0"
     },
     {
       "id": "multi-theme-support",
@@ -105,7 +113,8 @@ window.ROADMAP_DATA = {
         "docs/roadmap/common.js"
       ],
       "completed": "2026-10-24",
-      "notes": "Added interactive palette selector and full Day/Night mode support across all themes."
+      "notes": "Added interactive palette selector and full Day/Night mode support across all themes.",
+      "shippedIn": "0.1.0"
     },
     {
       "id": "scaffolder-generator",
@@ -123,7 +132,8 @@ window.ROADMAP_DATA = {
         "init_roadmap.py"
       ],
       "completed": "2026-10-24",
-      "notes": "Tested in sandbox; handles project names, custom highways, and sets up AGENTS.md."
+      "notes": "Tested in sandbox; handles project names, custom highways, and sets up AGENTS.md.",
+      "shippedIn": "0.1.0"
     },
     {
       "id": "agent-philosophy-docs",
@@ -141,7 +151,41 @@ window.ROADMAP_DATA = {
         "AGENTS.md"
       ],
       "completed": "2026-10-24",
-      "notes": "Explicitly instructed agents that they have full permission to modify or rewrite the HTML file system."
+      "notes": "Explicitly instructed agents that they have full permission to modify or rewrite the HTML file system.",
+      "shippedIn": "0.1.0"
+    },
+    {
+      "id": "add-claude-code-and-cursor-slash-command-extensions",
+      "targetRelease": "1.0.0",
+      "title": "Add Claude Code and Cursor slash command extensions",
+      "status": "doing",
+      "area": "cli",
+      "stories": [],
+      "notes": "",
+      "label": "Editor Plugins",
+      "stage": 1
+    },
+    {
+      "id": "create-theme-gallery-and-interactive-color-customizer",
+      "targetRelease": "1.0.0",
+      "title": "Create theme gallery and interactive color customizer",
+      "status": "todo",
+      "area": "theme",
+      "stories": [],
+      "notes": "",
+      "label": "Theme Gallery",
+      "stage": 2
+    },
+    {
+      "id": "build-live-interactive-project-showcase-documentation",
+      "targetRelease": "1.0.0",
+      "title": "Build live interactive project showcase documentation",
+      "status": "todo",
+      "area": "docs",
+      "stories": [],
+      "notes": "",
+      "label": "Docs Showcase",
+      "stage": 3
     }
   ],
   "decisions": [
@@ -161,6 +205,26 @@ window.ROADMAP_DATA = {
     }
   ],
   "log": [
+    {
+      "date": "2026-10-24",
+      "text": "Started add-claude-code-and-cursor-slash-command-extensions toward 1.0.0."
+    },
+    {
+      "date": "2026-10-24",
+      "text": "Added task build-live-interactive-project-showcase-documentation toward 1.0.0: Build live interactive project showcase documentation"
+    },
+    {
+      "date": "2026-10-24",
+      "text": "Added task create-theme-gallery-and-interactive-color-customizer toward 1.0.0: Create theme gallery and interactive color customizer"
+    },
+    {
+      "date": "2026-10-24",
+      "text": "Added task add-claude-code-and-cursor-slash-command-extensions toward 1.0.0: Add Claude Code and Cursor slash command extensions"
+    },
+    {
+      "date": "2026-10-24",
+      "text": "Released 0.1.0 after validation: All schema checks and visual map rendering verified across themes."
+    },
     {
       "date": "2026-10-24",
       "text": "Enforced strict proportional release writing and bundled major highway lanes"
