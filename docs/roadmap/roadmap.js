@@ -4,7 +4,7 @@ window.ROADMAP_DATA = {
   "now": "Initial release of the generalized visual roadmap engine",
   "prd": "https://github.com/notnotnotnoone/roadmap-gen#readme",
   "repo": "https://github.com/notnotnotnoone/roadmap-gen",
-  "updated": "2026-10-24",
+  "updated": "2026-10-26",
   "activeRelease": "1.0.0",
   "highways": [
     {
@@ -155,6 +155,22 @@ window.ROADMAP_DATA = {
       "shippedIn": "0.1.0"
     },
     {
+      "id": "consolidate-agent-roadmap-guide-with-native-completionist-clarity-and-remove-prompts",
+      "targetRelease": "1.0.0",
+      "title": "Consolidate agent roadmap guide with native Completionist clarity and remove prompts",
+      "status": "done",
+      "area": "docs",
+      "stories": [],
+      "notes": "Consolidated native Completionist rules directly into AGENTS.md/CLAUDE.md and eliminated prompts directory; tested in sandbox.",
+      "label": "Native Agent Guide",
+      "completed": "2026-10-26",
+      "refs": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "init_roadmap.py"
+      ]
+    },
+    {
       "id": "add-claude-code-and-cursor-slash-command-extensions",
       "targetRelease": "1.0.0",
       "title": "Add Claude Code and Cursor slash command extensions",
@@ -205,6 +221,26 @@ window.ROADMAP_DATA = {
     }
   ],
   "log": [
+    {
+      "date": "2026-10-26",
+      "text": "Completed consolidate-agent-roadmap-guide-with-native-completionist-clarity-and-remove-prompts toward 1.0.0; no release was created."
+    },
+    {
+      "date": "2026-10-26",
+      "text": "Consolidated comprehensive AGENTS.md guide with native Completionist clarity and eliminated prompts directory"
+    },
+    {
+      "date": "2026-10-26",
+      "text": "Marked consolidate-agent-roadmap-guide-with-native-completionist-clarity-and-remove-prompts implementation complete; verification is pending."
+    },
+    {
+      "date": "2026-10-26",
+      "text": "Started consolidate-agent-roadmap-guide-with-native-completionist-clarity-and-remove-prompts toward 1.0.0."
+    },
+    {
+      "date": "2026-10-26",
+      "text": "Added task consolidate-agent-roadmap-guide-with-native-completionist-clarity-and-remove-prompts toward 1.0.0: Consolidate agent roadmap guide with native Completionist clarity and remove prompts"
+    },
     {
       "date": "2026-10-24",
       "text": "Started add-claude-code-and-cursor-slash-command-extensions toward 1.0.0."
